@@ -7,8 +7,14 @@ import (
 	"strings"
 )
 
+const pokemonLocationUrl = "https://pokeapi.co/api/v2/location-area/"
+
 func main() {
 	scanner := bufio.NewScanner(os.Stdin)
+	commandConfig := config{
+		nextUrl: pokemonLocationUrl,
+		prevUrl: "",
+	}
 	supportedCommands := map[string]cliCommand{
 		"exit": {
 			name:        "exit",
@@ -20,6 +26,11 @@ func main() {
 			description: "Displays a help message",
 			callback:    commandHelp,
 		},
+		"map": {
+			name:        "map",
+			description: "Displays a map of the Pokemon world",
+			callback:    commandMap,
+		},
 	}
 
 	for {
@@ -30,7 +41,7 @@ func main() {
 		cleaned := cleanInput(input)
 
 		if supportedCommands[cleaned[0]].callback != nil {
-			if err := supportedCommands[cleaned[0]].callback(); err != nil {
+			if err := supportedCommands[cleaned[0]].callback(&commandConfig); err != nil {
 				fmt.Printf("Error: %v", err)
 				os.Exit(1)
 			}
