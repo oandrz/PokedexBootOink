@@ -31,6 +31,11 @@ func main() {
 			description: "Displays a map of the Pokemon world",
 			callback:    commandMap,
 		},
+		"mapb": {
+			name:        "mapb",
+			description: "Displays a map of the Pokemon world in reverse order",
+			callback:    commandMapB,
+		},
 	}
 
 	for {

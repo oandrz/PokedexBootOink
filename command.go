@@ -36,7 +36,24 @@ func commandMap(commandConfig *config) error {
 		return fmt.Errorf("command config cannot be nil")
 	}
 
-	result, err := fetchRemotePokemonMapLocation(commandConfig.nextUrl, commandConfig)
+	result, err := getPokemonMapLocation(commandConfig.nextUrl, commandConfig)
+	if err != nil {
+		return err
+	}
+
+	for _, location := range result {
+		fmt.Println(location.Name)
+	}
+
+	return nil
+}
+
+func commandMapB(commandConfig *config) error {
+	if commandConfig == nil {
+		return fmt.Errorf("command config cannot be nil")
+	}
+
+	result, err := getPokemonMapLocation(commandConfig.prevUrl, commandConfig)
 	if err != nil {
 		return err
 	}
