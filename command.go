@@ -5,15 +5,12 @@ import (
 	"os"
 )
 
+const pokemonLocationUrl = "https://pokeapi.co/api/v2/location-area/"
+
 type cliCommand struct {
 	name        string
 	description string
 	callback    func(*config) error
-}
-
-type config struct {
-	nextUrl string
-	prevUrl string
 }
 
 func commandExit(commandConfig *config) error {
@@ -36,12 +33,22 @@ func commandMap(commandConfig *config) error {
 		return fmt.Errorf("command config cannot be nil")
 	}
 
-	result, err := getPokemonMapLocation(commandConfig.nextUrl, commandConfig)
+	var url string
+	if commandConfig.nextUrl == nil {
+		url = pokemonLocationUrl
+	} else {
+		url = *commandConfig.nextUrl
+	}
+
+	result, err := commandConfig.pokemonClient.GetPokemonMapLocation(url)
 	if err != nil {
 		return err
 	}
 
-	for _, location := range result {
+	commandConfig.nextUrl = result.Next
+	commandConfig.prevUrl = result.Previous
+
+	for _, location := range result.Results {
 		fmt.Println(location.Name)
 	}
 
@@ -53,14 +60,22 @@ func commandMapB(commandConfig *config) error {
 		return fmt.Errorf("command config cannot be nil")
 	}
 
-	result, err := getPokemonMapLocation(commandConfig.prevUrl, commandConfig)
+	if commandConfig.prevUrl == nil {
+		fmt.Println("you're on the first page, no previous locations")
+		return nil
+	}
+
+	result, err := commandConfig.pokemonClient.GetPokemonMapLocation(*commandConfig.prevUrl)
 	if err != nil {
 		return err
 	}
 
-	for _, location := range result {
+	for _, location := range result.Results {
 		fmt.Println(location.Name)
 	}
+
+	commandConfig.nextUrl = result.Next
+	commandConfig.prevUrl = result.Previous
 
 	return nil
 }
