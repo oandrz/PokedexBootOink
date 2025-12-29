@@ -95,3 +95,20 @@ func commandExplore(commandConfig *config, args ...string) error {
 
 	return nil
 }
+
+func commandCatch(commandConfig *config, args ...string) error {
+	pokemonName := args[0]
+	fmt.Println("Throwing a Pokeball at " + pokemonName + "...")
+	isSuccess, err := commandConfig.pokemonClient.CatchPokemon(pokemonName)
+	if err != nil {
+		return err
+	}
+
+	if isSuccess {
+		fmt.Println("Success Caught " + pokemonName + "...")
+		return nil
+	}
+
+	fmt.Println("Failed to catch " + pokemonName + "...")
+	return nil
+}

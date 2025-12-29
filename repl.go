@@ -43,6 +43,11 @@ func startRepl(cfg *config) {
 			description: "Explore a specific city in the Pokemon world",
 			callback:    commandExplore,
 		},
+		"catch": {
+			name:        "catch",
+			description: "Catch a specific Pokemon",
+			callback:    commandCatch,
+		},
 	}
 
 	for {

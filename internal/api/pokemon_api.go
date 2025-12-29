@@ -21,10 +21,6 @@ type MapLocation struct {
 	Url  string `json:"url"`
 }
 
-type Pokemon struct {
-	Name string `json:"name"`
-}
-
 func (c *Client) GetPokemonMapLocation(url string) (PokemonMapResponse, error) {
 	if cached, ok := c.cache.Get(url); ok {
 		fmt.Println("Using cached data")
