@@ -12,7 +12,9 @@ type PokemonMapResponse struct {
 	Previous          *string       `json:"previous"`
 	Results           []MapLocation `json:"results"`
 	PokemonsEncounter []struct {
-		PokemonEncounter Pokemon `json:"pokemon"`
+		PokemonEncounter struct {
+			Name string `json:"name"`
+		} `json:"pokemon"`
 	} `json:"pokemon_encounters"`
 }
 

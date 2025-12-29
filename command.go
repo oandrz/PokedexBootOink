@@ -112,3 +112,17 @@ func commandCatch(commandConfig *config, args ...string) error {
 	fmt.Println("Failed to catch " + pokemonName + "...")
 	return nil
 }
+
+func commandInspect(commandConfig *config, args ...string) error {
+	pokemonName := args[0]
+	pokedex := commandConfig.pokemonClient.Pokedex
+
+	pokemon, ok := pokedex[pokemonName]
+	if !ok {
+		fmt.Println("Pokemon not found in pokedex")
+		return nil
+	}
+
+	pokemon.Print()
+	return nil
+}

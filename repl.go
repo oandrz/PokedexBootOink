@@ -48,6 +48,11 @@ func startRepl(cfg *config) {
 			description: "Catch a specific Pokemon",
 			callback:    commandCatch,
 		},
+		"inspect": {
+			name:        "inspect",
+			description: "Inspect a specific Pokemon",
+			callback:    commandInspect,
+		},
 	}
 
 	for {

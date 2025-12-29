@@ -10,8 +10,25 @@ import (
 const basePokemonUrl = "https://pokeapi.co/api/v2/pokemon/"
 
 type PokemonDetailResponse struct {
-	Name           string `json:"name"`
-	BaseExperience int    `json:"base_experience"`
+	Name           string                `json:"name"`
+	BaseExperience int                   `json:"base_experience"`
+	Weight         int                   `json:"weight"`
+	Height         int                   `json:"height"`
+	Types          []PokemonTypeResponse `json:"types"`
+	Stats          []PokemonStatResponse `json:"stats"`
+}
+
+type PokemonTypeResponse struct {
+	Type struct {
+		Name string `json:"name"`
+	} `json:"type"`
+}
+
+type PokemonStatResponse struct {
+	BaseStat int `json:"base_stat"`
+	Stat     struct {
+		Name string `json:"name"`
+	} `json:"stat"`
 }
 
 /*
@@ -59,7 +76,22 @@ func (c *Client) CatchPokemon(pokemonName string) (bool, error) {
 	isSuccess := roll <= catchChance
 
 	if isSuccess {
-		c.pokedex[pokemonName] = Pokemon{Name: pokemonName}
+		c.Pokedex[pokemonName] = Pokemon{
+			Name:   pokemonName,
+			Weight: pokemonDetail.Weight,
+			Height: pokemonDetail.Height,
+			Types: Map(pokemonDetail.Types, func(p PokemonTypeResponse) PokemonType {
+				return PokemonType{
+					Name: p.Type.Name,
+				}
+			}),
+			Stats: Map(pokemonDetail.Stats, func(p PokemonStatResponse) PokemonStat {
+				return PokemonStat{
+					Name:  p.Stat.Name,
+					Value: p.BaseStat,
+				}
+			}),
+		}
 	}
 
 	return isSuccess, nil
@@ -90,4 +122,12 @@ func decodePokemonDetail(data []byte) (PokemonDetailResponse, error) {
 	var pokemonDetail PokemonDetailResponse
 	err := json.Unmarshal(data, &pokemonDetail)
 	return pokemonDetail, err
+}
+
+func Map[T any, U any](slice []T, transform func(T) U) []U {
+	result := make([]U, len(slice))
+	for i, v := range slice {
+		result[i] = transform(v)
+	}
+	return result
 }
