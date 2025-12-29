@@ -10,16 +10,16 @@ const pokemonLocationUrl = "https://pokeapi.co/api/v2/location-area/"
 type cliCommand struct {
 	name        string
 	description string
-	callback    func(*config) error
+	callback    func(*config, ...string) error
 }
 
-func commandExit(commandConfig *config) error {
+func commandExit(commandConfig *config, args ...string) error {
 	fmt.Print("Closing the Pokedex... Goodbye!")
 	os.Exit(0)
 	return nil
 }
 
-func commandHelp(commandConfig *config) error {
+func commandHelp(commandConfig *config, args ...string) error {
 	fmt.Println("Welcome to the Pokedex!")
 	fmt.Println("Usage")
 	fmt.Println("help: Displays a help message")
@@ -28,7 +28,7 @@ func commandHelp(commandConfig *config) error {
 	return nil
 }
 
-func commandMap(commandConfig *config) error {
+func commandMap(commandConfig *config, args ...string) error {
 	if commandConfig == nil {
 		return fmt.Errorf("command config cannot be nil")
 	}
@@ -55,7 +55,7 @@ func commandMap(commandConfig *config) error {
 	return nil
 }
 
-func commandMapB(commandConfig *config) error {
+func commandMapB(commandConfig *config, args ...string) error {
 	if commandConfig == nil {
 		return fmt.Errorf("command config cannot be nil")
 	}
@@ -76,6 +76,22 @@ func commandMapB(commandConfig *config) error {
 
 	commandConfig.nextUrl = result.Next
 	commandConfig.prevUrl = result.Previous
+
+	return nil
+}
+
+func commandExplore(commandConfig *config, args ...string) error {
+	cityToExplore := args[0]
+	url := pokemonLocationUrl + cityToExplore
+	fmt.Println("Exploring " + cityToExplore + "...")
+	result, err := commandConfig.pokemonClient.GetPokemonMapLocation(url)
+	if err != nil {
+		return err
+	}
+
+	for _, pokemonEncounter := range result.PokemonsEncounter {
+		fmt.Println(pokemonEncounter.PokemonEncounter.Name)
+	}
 
 	return nil
 }

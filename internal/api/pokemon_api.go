@@ -8,14 +8,21 @@ import (
 )
 
 type PokemonMapResponse struct {
-	Next     *string       `json:"next"`
-	Previous *string       `json:"previous"`
-	Results  []MapLocation `json:"results"`
+	Next              *string       `json:"next"`
+	Previous          *string       `json:"previous"`
+	Results           []MapLocation `json:"results"`
+	PokemonsEncounter []struct {
+		PokemonEncounter Pokemon `json:"pokemon"`
+	} `json:"pokemon_encounters"`
 }
 
 type MapLocation struct {
 	Name string `json:"name"`
 	Url  string `json:"url"`
+}
+
+type Pokemon struct {
+	Name string `json:"name"`
 }
 
 func (c *Client) GetPokemonMapLocation(url string) (PokemonMapResponse, error) {

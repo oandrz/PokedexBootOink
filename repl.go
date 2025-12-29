@@ -38,6 +38,11 @@ func startRepl(cfg *config) {
 			description: "Displays a map of the Pokemon world in reverse order",
 			callback:    commandMapB,
 		},
+		"explore": {
+			name:        "explore",
+			description: "Explore a specific city in the Pokemon world",
+			callback:    commandExplore,
+		},
 	}
 
 	for {
@@ -47,8 +52,18 @@ func startRepl(cfg *config) {
 		input := strings.ToLower(scanner.Text())
 		cleaned := cleanInput(input)
 
-		if supportedCommands[cleaned[0]].callback != nil {
-			if err := supportedCommands[cleaned[0]].callback(cfg); err != nil {
+		if cleaned[0] == "" {
+			continue
+		}
+
+		command := cleaned[0]
+		args := []string{}
+		if len(cleaned) > 1 {
+			args = cleaned[1:]
+		}
+
+		if supportedCommands[command].callback != nil {
+			if err := supportedCommands[command].callback(cfg, args...); err != nil {
 				fmt.Printf("Error: %v", err)
 				os.Exit(1)
 			}
