@@ -45,6 +45,10 @@ func (c *Client) fetchRemotePokemonMapLocation(url string) (PokemonMapResponse, 
 	}
 	defer resp.Body.Close()
 
+	if resp.StatusCode != http.StatusOK {
+		return PokemonMapResponse{}, err
+	}
+
 	data, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return PokemonMapResponse{}, err

@@ -32,3 +32,8 @@ func (p Pokemon) Print() {
 		fmt.Printf("  - %s\n", t.Name)
 	}
 }
+
+func (p Pokemon) PokedexPrint() {
+	fmt.Println("Your Pokedex:")
+	fmt.Printf("- %s\n", p.Name)
+}

@@ -126,3 +126,12 @@ func commandInspect(commandConfig *config, args ...string) error {
 	pokemon.Print()
 	return nil
 }
+
+func commandPokedex(commandConfig *config, args ...string) error {
+	pokedex := commandConfig.pokemonClient.Pokedex
+	for _, pokemon := range pokedex {
+		pokemon.PokedexPrint()
+	}
+
+	return nil
+}

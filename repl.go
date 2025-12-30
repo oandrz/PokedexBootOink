@@ -53,6 +53,11 @@ func startRepl(cfg *config) {
 			description: "Inspect a specific Pokemon",
 			callback:    commandInspect,
 		},
+		"pokedex": {
+			name:        "pokedex",
+			description: "Displays the entire Pokedex",
+			callback:    commandPokedex,
+		},
 	}
 
 	for {

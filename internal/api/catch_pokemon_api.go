@@ -63,7 +63,7 @@ Core formula: catchChance = 50 / baseExperience
 */
 func (c *Client) CatchPokemon(pokemonName string) (bool, error) {
 	pokemonDetail, err := c.fetchPokemonDetailRemotely(pokemonName)
-	if err != nil {
+	if err != nil || pokemonDetail.Name == "" {
 		return false, err
 	}
 
@@ -104,6 +104,10 @@ func (c *Client) fetchPokemonDetailRemotely(pokemonName string) (PokemonDetailRe
 		return PokemonDetailResponse{}, err
 	}
 	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return PokemonDetailResponse{}, err
+	}
 
 	data, err := io.ReadAll(resp.Body)
 	if err != nil {
